@@ -63,7 +63,7 @@ exports.checkLogin = async (req, res) => {
       if (checkLogin) {
         res
           .status(201)
-          .json({ data: "success", token: generateAccessToken(data.id) });
+          .json({ data: "success", token: generateAccessToken(data._id) });
       } else {
         res.status(401).json({ data: "Failed" });
       }

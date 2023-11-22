@@ -1,11 +1,10 @@
 const path = require('path');
-const expenseData = require('../Model/expenseModel');
+// const expenseData = require('../Model/expenseModel');
 const userDB = require('../Model/userModel');
-const sequelize = require('../db');
-const yearlyReportDb = require('../Model/yearlyReaportModel');
+// const yearlyReportDb = require('../Model/yearlyReaportModel');
 const XLSX = require('xlsx');
 const { uploadToS3 } = require('../Services/S3Services');
-const UrlDb = require('../Model/fileDownloadUrlModel');
+// const UrlDb = require('../Model/fileDownloadUrlModel');
 
 exports.mainHome = (req, res) => {
     res.sendFile(path.join(__dirname, '..', '..', 'Frontend', 'Views', 'homeAfterLogin.html'))
