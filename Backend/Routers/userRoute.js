@@ -7,8 +7,8 @@ userRouter.get("/login", userController.getLoginPage);
 userRouter.post("/addUser", userController.addUser);
 userRouter.post("/check-login", userController.checkLogin);
 userRouter.get("/home", userController.getHome);
-// userRouter.post("/forgetPassword", userController.SendforgetPasswordLink);
-// userRouter.get("/forgetPassword/:id", userController.getForgetPasswordPage);
-// userRouter.post("/updatePasswordData", userController.updatePasswordData);
+userRouter.post("/forgetPassword", userController.SendforgetPasswordLink);
+userRouter.get("/forgetPassword/:id", userController.getForgetPasswordPage);
+userRouter.post("/updatePasswordData", userController.updatePasswordData);
 
 module.exports = userRouter;
