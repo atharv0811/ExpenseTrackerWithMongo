@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Expenses</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light ms-2" id="navBeforeLogin">
+        <a class="navbar-brand" href="/expense/mainHome">Expense Tracker</a>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/expense/expense" id="expense">Add Expenses</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link float-end active" href="/expense/viewExpenses" id="view-expense">View
+                        Expenses</a>
+                </li>
+            </ul>
+        </div>
+        <button class="btn mr-1 btn-danger btn-sm float-right mx-3">
+            <a href="/" class="text-decoration-none text-light">LogOut</a>
+        </button>
+    </nav>
+    <div class="container mt-5">
+        <div class="text-center">
+            <h3 class="text-primary">Your All Expenses</h3>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover" id="table">
+                <thead class="bg-primary text-white text-center">
+                    <tr>
+                        <th scope="col">Amount</th>
+                        <th scope="col">Category</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Edit</th>
+                        <th scope="col">Delete</th>
+                    </tr>
+                </thead>
+                <tbody id="tablebody" class="text-center">
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div id="paginationDiv" class="container text-center"></div>
+    <div class="container mt-3">
+        <label for="rowsPerPage">Rows per Page:</label>
+        <select id="rowsPerPage" class="form-select">
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="15">15</option>
+            <option value="20">20</option>
+        </select>
+    </div>
+
+    <script src="/viewExpenseScript.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+        crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Expense</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light ms-2" id="navBeforeLogin">
+        <a class="navbar-brand" href="/expense/mainHome">Expense Tracker</a>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link active" href="/expense/expense" id="expense">Add Expenses</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link float-end" href="/expense/viewExpenses" id="view-expense">View Expenses</a>
+                </li>
+            </ul>
+        </div>
+        <button class="btn mr-1 btn-danger btn-sm float-right mx-3">
+            <a href="/" class="text-decoration-none text-light">LogOut</a>
+        </button>
+    </nav>
+    <div class="container mt-3">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <form id="AddExpenseForm" class="p-4 bg-light rounded">
+                    <h2 class="mb-4 text-center">Add Expense!</h2>
+                    <div class="mb-3">
+                        <label for="ExpenseAmount" class="form-label">Expense Amount:</label>
+                        <input type="number" class="form-control" id="ExpenseAmount" name="ExpenseAmount"
+                            placeholder="Enter amount you have spent" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="ExpenseDesc" class="form-label">Description:</label>
+                        <textarea class="form-control" id="ExpenseDesc" name="ExpenseDesc"
+                            placeholder="Enter some Description" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="ExpenseType" class="form-label">Expense Type:</label>
+                        <select class="form-select" id="ExpenseType" name="ExpenseType" required>
+                            <option value="" disabled selected>Choose Expense Type</option>
+                            <option>Food</option>
+                            <option>Shopping</option>
+                            <option>Traveling</option>
+                            <option>Other Expenses</option>
+                        </select>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary btn-lg" id="btnSubmit">Submit</button>
+                    </div>
+                </form>
+                <div class="text-center mt-4" id="PremiumDiv"></div>
+            </div>
+        </div>
+    </div>
+    <script src="/addExpenseScript.js"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
