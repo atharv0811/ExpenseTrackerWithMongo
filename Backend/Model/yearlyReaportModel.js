@@ -1,19 +1,21 @@
-const { Sequelize } = require("sequelize");
-const sequelize = require('../db');
-const yearlyReportDb = sequelize.define('YearlyReport', {
-    id: {
-        type: Sequelize.INTEGER,
-        primaryKey: true,
-        autoIncrement: true
-    },
+const { default: mongoose } = require("mongoose");
+const Schema = mongoose.Schema;
+
+const yearlyReportSchema = new Schema({
     year: {
-        type: Sequelize.STRING,
-        allowNull: false
+        type: String,
+        required: true
     },
     TotalExpense: {
-        type: Sequelize.DECIMAL,
-        allowNull: false,
-        defaultValue: 0
-    }
+        type: Schema.Types.Decimal128,
+        required: true,
+        default: 0
+    },
+    userId: {
+        type: Schema.Types.ObjectId,
+        ref: "Users",
+        required: true,
+    },
 })
-module.exports = yearlyReportDb;
+
+module.exports = mongoose.model('YearlyReport', yearlyReportSchema);
