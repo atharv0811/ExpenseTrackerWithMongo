@@ -1,18 +1,20 @@
-const { Sequelize } = require("sequelize");
-const sequelize = require("../db");
-const UrlDb = sequelize.define('DurlData', {
-    id: {
-        type: Sequelize.INTEGER,
-        autoIncrement: true,
-        primaryKey: true
-    },
-    date: {
-        type: Sequelize.STRING,
-        allowNull: false
-    },
-    fileUrl: {
-        type: Sequelize.TEXT,
-        allowNull: false
-    }
+const { default: mongoose } = require("mongoose");
+const Schema = mongoose.Schema;
+
+const UrlSchema = new Schema({
+  date: {
+    type: String,
+    required: true,
+  },
+  fileUrl: {
+    type: String,
+    requried: true,
+  },
+  userId: {
+    type: Schema.Types.ObjectId,
+    ref: "Users",
+    required: true,
+  },
 });
-module.exports = UrlDb;
+
+module.exports = mongoose.model("UrlData", UrlSchema);

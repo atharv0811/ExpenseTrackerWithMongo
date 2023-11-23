@@ -4,7 +4,7 @@ const userDB = require("../Model/userModel");
 const yearlyReportDb = require("../Model/yearlyReaportModel");
 const XLSX = require("xlsx");
 const { uploadToS3 } = require("../Services/S3Services");
-// const UrlDb = require('../Model/fileDownloadUrlModel');
+const UrlDb = require("../Model/fileDownloadUrlModel");
 
 exports.mainHome = (req, res) => {
   res.sendFile(
@@ -259,8 +259,8 @@ exports.getViewMonetaryPage = (req, res) => {
 
 exports.getYearlyExpensesData = async (req, res) => {
   try {
-    const id = req.user.id;
-    const result = await yearlyReportDb.findAll({ where: { userDatumId: id } });
+    const id = req.user._id;
+    const result = await yearlyReportDb.find({ userId: id });
     res.json(result);
   } catch (err) {
     res.status(500).json({ data: "error" });
@@ -270,8 +270,8 @@ exports.getYearlyExpensesData = async (req, res) => {
 
 exports.getDownloadUrl = async (req, res) => {
   try {
-    const id = req.user.id;
-    const result = await UrlDb.findAll({ where: { userDatumId: id } });
+    const id = req.user._id;
+    const result = await UrlDb.find({ userId: id });
     res.json(result);
   } catch (err) {
     res.status(500).json({ data: "error" });
@@ -280,7 +280,7 @@ exports.getDownloadUrl = async (req, res) => {
 };
 
 exports.downloadExpense = async (req, res) => {
-  const userId = req.user.id;
+  const userId = req.user._id;
   const date = new Date().toLocaleString().replace(/\//g, "-");
   const { dailyData, weeklyData, monthlyData, yearlyData } = req.body;
 
@@ -320,11 +320,13 @@ exports.downloadExpense = async (req, res) => {
         "Content-Type",
         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
       );
-      await UrlDb.create({
+      const UrlData = new UrlDb({
         date: date,
         fileUrl: fileUrl,
-        userDatumId: userId,
+        userId: userId,
       });
+      await UrlData.save();
+
       res.status(200).json({ fileUrl, success: true });
     })
     .catch((error) => {
@@ -335,8 +337,8 @@ exports.downloadExpense = async (req, res) => {
 
 module.exports.viewReportExpensesData = async (req, res) => {
   try {
-    const id = req.user.id;
-    const result = await expenseData.findAll({ where: { userDatumId: id } });
+    const id = req.user._id;
+    const result = await expenseData.find({ userId: id });
     res.json(result);
   } catch (err) {
     res.status(500).json({ data: "error" });

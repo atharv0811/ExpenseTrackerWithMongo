@@ -37,15 +37,15 @@ async function fetchData() {
     const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
     const formattedDate = currentDate.toLocaleDateString('en-US', options);
     const [month, day, year] = formattedDate.split('/');
-    const today = `${year}-${month}-${day}`;
+    const today = `${day}/${month}/${year}`;
     const thisWeekStart = new Date(currentDate);
     thisWeekStart.setDate(currentDate.getDate() - currentDate.getDay());
     const thisWeekStartFormatted = thisWeekStart.toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' });
     const thisMonthStart = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
     const thisMonthStartFormatted = thisMonthStart.toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' });
-    const dailyData = result.data.filter(item => item.updatedAt.startsWith(today));
-    const weeklyData = result.data.filter(item => item.updatedAt >= thisWeekStartFormatted);
-    const monthlyData = result.data.filter(item => item.updatedAt >= thisMonthStartFormatted);
+    const dailyData = result.data.filter(item => item.date.startsWith(today));
+    const weeklyData = result.data.filter(item => item.date >= thisWeekStartFormatted);
+    const monthlyData = result.data.filter(item => item.date >= thisMonthStartFormatted);
 
     displayData(dailyData, table1, tablebody1, dailyDataArray);
     displayData(weeklyData, table2, tablebody2, weeklyDataArray);
@@ -61,11 +61,11 @@ async function displayData(data, tablebody, table, dataArray) {
             tr.className = 'text-center'
             let td1 = document.createElement("td");
             td1.id = "td1";
-            td1.appendChild(document.createTextNode(new Date(data[i].updatedAt).toISOString().split('T')[0]));
+            td1.appendChild(document.createTextNode(data[i].date));
             tr.appendChild(td1);
             let td2 = document.createElement("td");
             td2.id = "td2";
-            td2.appendChild(document.createTextNode(data[i].expenseAmount));
+            td2.appendChild(document.createTextNode(data[i].expenseAmount.$numberDecimal));
             tr.appendChild(td2);
             let td3 = document.createElement("td");
             td3.id = "td3";
@@ -76,8 +76,8 @@ async function displayData(data, tablebody, table, dataArray) {
             td4.appendChild(document.createTextNode(data[i].description));
             tr.appendChild(td4);
             dataArray.push({
-                date: new Date(data[i].updatedAt).toISOString().split('T')[0],
-                ExpenseAmount: data[i].expenseAmount,
+                date: data[i].date,
+                ExpenseAmount: data[i].expenseAmount.$numberDecimal,
                 expenseType: data[i].expenseType,
                 description: data[i].description,
             });
@@ -107,11 +107,11 @@ async function displayYearlyReport(data, tablebody, table, dataArray) {
             tr.appendChild(td1);
             let td3 = document.createElement("td");
             td3.id = "td3";
-            td3.appendChild(document.createTextNode(data[i].TotalExpense));
+            td3.appendChild(document.createTextNode(data[i].TotalExpense.$numberDecimal));
             tr.appendChild(td3);
             dataArray.push({
                 monthYear: `${monthName} ${year}`,
-                totalExpense: data[i].TotalExpense,
+                totalExpense: data[i].TotalExpense.$numberDecimal,
             });
             tablebody.appendChild(tr)
         }
