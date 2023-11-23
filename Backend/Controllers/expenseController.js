@@ -89,13 +89,13 @@ exports.getExpenseData = async (req, res) => {
   let totalItems;
   try {
     const page = +req.query.page || 1;
-    const id = req.user.id;
-    totalItems = await expenseData.count({ where: { userDatumId: id } });
-    const result = await expenseData.findAll({
-      where: { userDatumId: id },
-      offset: (page - 1) * limit,
-      limit: limit,
-    });
+    const id = req.user._id;
+    totalItems = await expenseData.countDocuments({ userId: id });
+    const result = await expenseData
+      .find({ userId: id })
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .exec();
     res.json({
       result,
       currentPage: page,
