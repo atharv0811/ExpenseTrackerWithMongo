@@ -55,7 +55,7 @@ async function displayData(data) {
       var delbutton = document.createElement("button");
       delbutton.className = "btn btn-danger btn-sm float-right m-0 delete";
       delbutton.addEventListener("click", () => {
-        deleteData(data[i].id, data[i].expenseAmount);
+        deleteData(data[i]._id, data[i].expenseAmount.$numberDecimal);
       });
       delbutton.appendChild(document.createTextNode("Delete"));
       let td5 = document.createElement("td");

@@ -115,20 +115,22 @@ exports.deleteExpenseData = async (req, res) => {
   const date = formatDate(new Date().toLocaleDateString());
   try {
     const id = req.body.id;
-    const userid = req.user.id;
+    const userid = req.user._id;
     const expenseAmount = parseInt(req.body.ExpenseAmount);
     console.log(expenseAmount);
     const moneyDataRecord = await expenseData.findOne({
-      where: { id: id, userDatumId: userid },
+      _id: id,
+      userId: userid,
     });
-    const { updatedAt } = moneyDataRecord;
-    const currentMonth = updatedAt.getMonth() + 1;
-    const currentYear = updatedAt.getFullYear();
-    const formattedDate = `${currentMonth
-      .toString()
-      .padStart(2, "0")}-${currentYear}`;
+    const dataFromTb = moneyDataRecord.date;
+    const parts = dataFromTb.split("/");
+    const month = parts[1];
+    const year = parts[2];
+    const formattedDate = `${month.toString().padStart(2, "0")}-${year}`;
+
     const yearlyResult = await yearlyReportDb.findOne({
-      where: { userDatumId: userid, year: formattedDate },
+      userId: userid,
+      year: formattedDate,
     });
 
     if (!yearlyResult) {
@@ -137,20 +139,17 @@ exports.deleteExpenseData = async (req, res) => {
       );
     }
     const YearlytotalExpense = parseInt(yearlyResult.TotalExpense);
-    const result = await userDB.findByPk(userid, {
-      attributes: ["totalExpense"],
-    });
+    const result = await userDB.findById(userid);
     const totalExpense = parseInt(result.totalExpense);
-    console.log(totalExpense);
 
-    await expenseData.destroy({ where: { id: id, userDatumId: userid } });
-    await yearlyReportDb.update(
-      { TotalExpense: YearlytotalExpense - expenseAmount },
-      { where: { userDatumId: userid, year: formattedDate } }
+    await expenseData.deleteOne({ _id: id, userId: userid });
+    await yearlyReportDb.updateOne(
+      { userId: userid, year: formattedDate },
+      { TotalExpense: YearlytotalExpense - expenseAmount }
     );
-    await userDB.update(
-      { date: date, totalExpense: totalExpense - expenseAmount },
-      { where: { id: userid } }
+    await userDB.updateOne(
+      { _id: userid },
+      { date: date, totalExpense: totalExpense - expenseAmount }
     );
 
     res.redirect("/expense/viewExpenses");
@@ -165,51 +164,50 @@ exports.updateExpense = async (req, res) => {
   try {
     const body = req.body;
     const id = body.id;
-    const userid = req.user.id;
+    const userid = req.user._id;
     const newExpenseAmount = parseInt(body.data.ExpenseAmount);
     const newDescription = body.data.ExpenseDesc;
     const newExpenseType = body.data.ExpenseType;
 
     const ExpenseData = await expenseData.findOne({
-      where: { id: id, userDatumId: userid },
+      _id: id,
+      userId: userid,
     });
 
     const oldExpenseAmount = parseInt(ExpenseData.expenseAmount);
-    const updatedAt = ExpenseData.updatedAt;
-    const currentMonth = updatedAt.getMonth() + 1;
-    const currentYear = updatedAt.getFullYear();
-    const formattedDate = `${currentMonth
-      .toString()
-      .padStart(2, "0")}-${currentYear}`;
+    const dataFromTb = ExpenseData.date;
+    const parts = dataFromTb.split("/");
+    const month = parts[1];
+    const year = parts[2];
+    const formattedDate = `${month.toString().padStart(2, "0")}-${year}`;
 
-    ExpenseData.date = date;
-    ExpenseData.expenseAmount = newExpenseAmount;
-    ExpenseData.description = newDescription;
-    ExpenseData.expenseType = newExpenseType;
-
-    await ExpenseData.save();
-
-    const result = await userDB.findByPk(userid, {
-      attributes: ["totalExpense"],
+    await ExpenseData.updateOne({
+      date: date,
+      expenseAmount: parseInt(newExpenseAmount),
+      description: newDescription,
+      expenseType: newExpenseType,
     });
+
+    const result = await userDB.findById(userid);
     const totalExpense = parseInt(result.totalExpense);
     const expenseAmountDifference = oldExpenseAmount - newExpenseAmount;
 
     const yearlyResult = await yearlyReportDb.findOne({
-      where: { userDatumId: userid, year: formattedDate },
+      userId: userid,
+      year: formattedDate,
     });
     const YearlytotalExpense = parseInt(yearlyResult.TotalExpense);
     const TotalexpenseAmountDifference = parseInt(
       oldExpenseAmount - newExpenseAmount
     );
 
-    await yearlyReportDb.update(
-      { TotalExpense: YearlytotalExpense - TotalexpenseAmountDifference },
-      { where: { userDatumId: userid, year: formattedDate } }
+    await yearlyReportDb.updateOne(
+      { userId: userid, year: formattedDate },
+      { TotalExpense: YearlytotalExpense - TotalexpenseAmountDifference }
     );
-    await userDB.update(
-      { date: date, totalExpense: totalExpense - expenseAmountDifference },
-      { where: { id: userid } }
+    await userDB.updateOne(
+      { _id: userid },
+      { date: date, totalExpense: totalExpense - expenseAmountDifference }
     );
 
     res.status(201).json({ data: "success" });
@@ -234,10 +232,11 @@ exports.getLeaderBoardPage = (req, res) => {
 
 exports.getLeaderBoardData = async (req, res) => {
   try {
-    const leaderboardData = await userDB.findAll({
-      attributes: ["id", "name", "totalExpense"],
-      order: [[sequelize.col("totalExpense"), "DESC"]],
-    });
+    const leaderboardData = await userDB
+      .find({})
+      .select("name totalExpense")
+      .sort()
+      .exec();
     res.status(200).json(leaderboardData);
   } catch (error) {
     console.error(error);
